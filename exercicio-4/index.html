@@ -3,91 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jogo das Formas Geométricas</title>
+  <title>Jokenpô</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
+    body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+    h2 { margin-bottom: 20px; }
+    .opcoes img {
+      width: 120px; margin: 10px; cursor: pointer; transition: transform 0.2s;
     }
-    select, input, button {
-      margin-top: 10px;
-      padding: 8px;
-    }
-    #resultado {
-      margin-top: 20px;
-      font-weight: bold;
-      font-size: 18px;
-    }
-    .par { color: green; }
-    .impar { color: red; }
+    .opcoes img:hover { transform: scale(1.1); }
+    #resultado { font-size: 20px; margin-top: 20px; font-weight: bold; }
+    #pontos { margin-top: 15px; font-size: 18px; }
   </style>
 </head>
 <body>
-  <h2>Jogo das Formas Geométricas</h2>
+  <h2>🎮 Jokenpô</h2>
+  <p>Escolha uma opção para jogar contra a máquina:</p>
 
-  <label for="forma">Escolha a forma:</label><br>
-  <select id="forma" onchange="mostrarCampos()">
-    <option value="">-- Selecione --</option>
-    <option value="quadrado">Quadrado</option>
-    <option value="retangulo">Retângulo</option>
-    <option value="circulo">Círculo</option>
-  </select>
-
-  <div id="campos"></div>
-
-  <button onclick="calcular()">Calcular</button>
+  <div class="opcoes">
+    <img src="https://img.icons8.com/emoji/96/rock-emoji.png" alt="Pedra" onclick="jogar(0)">
+    <img src="https://img.icons8.com/emoji/96/page-facing-up.png" alt="Papel" onclick="jogar(1)">
+    <img src="https://img.icons8.com/emoji/96/scissors-emoji.png" alt="Tesoura" onclick="jogar(2)">
+  </div>
 
   <div id="resultado"></div>
+  <div id="pontos"></div>
 
   <script>
-    function mostrarCampos() {
-      const forma = document.getElementById("forma").value;
-      const camposDiv = document.getElementById("campos");
-      camposDiv.innerHTML = "";
+    let pontos = 0;
+    const opcoes = ["Pedra", "Papel", "Tesoura"];
 
-      if (forma === "quadrado") {
-        camposDiv.innerHTML = '<br>Lado: <input type="number" id="lado" step="0.01">';
-      } else if (forma === "retangulo") {
-        camposDiv.innerHTML = '<br>Base: <input type="number" id="base" step="0.01">' +
-                              '<br>Altura: <input type="number" id="altura" step="0.01">';
-      } else if (forma === "circulo") {
-        camposDiv.innerHTML = '<br>Raio: <input type="number" id="raio" step="0.01">';
-      }
-    }
+    function jogar(escolhaJogador) {
+      const escolhaMaquina = Math.floor(Math.random() * 3);
 
-    function calcular() {
-      const forma = document.getElementById("forma").value;
-      let resultado = 0;
+      let resultado = `Você jogou: ${opcoes[escolhaJogador]} <br>
+                       Máquina jogou: ${opcoes[escolhaMaquina]} <br>`;
 
-      if (forma === "quadrado") {
-        const lado = parseFloat(document.getElementById("lado").value);
-        resultado = lado * lado;
-      } else if (forma === "retangulo") {
-        const base = parseFloat(document.getElementById("base").value);
-        const altura = parseFloat(document.getElementById("altura").value);
-        resultado = base * altura;
-      } else if (forma === "circulo") {
-        const raio = parseFloat(document.getElementById("raio").value);
-        resultado = Math.PI * Math.pow(raio, 2);
+      if (escolhaJogador === escolhaMaquina) {
+        resultado += "😅 Empate!";
+      } else if (
+        (escolhaJogador === 0 && escolhaMaquina === 2) ||
+        (escolhaJogador === 1 && escolhaMaquina === 0) ||
+        (escolhaJogador === 2 && escolhaMaquina === 1)
+      ) {
+        pontos++;
+        resultado += "🎉 Você venceu esta rodada!";
       } else {
-        document.getElementById("resultado").innerHTML = "Escolha uma forma válida!";
-        return;
+        resultado += "💀 A máquina venceu! Fim de jogo.";
+        document.getElementById("pontos").innerHTML = `🏆 Pontuação final: ${pontos}`;
+        document.querySelectorAll(".opcoes img").forEach(img => img.onclick = null); // Desativa o jogo
       }
 
-      // Resultado com 2 casas decimais
-      const resultadoFormatado = resultado.toFixed(2);
-
-      // Verificação par ou ímpar (considerando parte inteira)
-      const inteiro = Math.round(resultado);
-      let mensagem = `Resultado: ${resultadoFormatado}<br>`;
-
-      if (inteiro % 2 === 0) {
-        mensagem += `<span class="par">🎉 Parabéns! O resultado (${inteiro}) é PAR!</span>`;
-      } else {
-        mensagem += `<span class="impar">😢 Que pena! O resultado (${inteiro}) é ÍMPAR. Você perdeu o jogo!</span>`;
-      }
-
-      document.getElementById("resultado").innerHTML = mensagem;
+      document.getElementById("resultado").innerHTML = resultado;
+      document.getElementById("pontos").innerHTML = `Pontos: ${pontos}`;
     }
   </script>
 </body>
