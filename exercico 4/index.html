@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faixa Etária</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, button {
+            padding: 8px;
+            margin-top: 10px;
+        }
+        #resultado {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Verifique sua faixa etária</h2>
+    <label for="ano">Digite o ano do seu nascimento:</label><br>
+    <input type="number" id="ano" placeholder="Ex: 2000">
+    <button onclick="verificar()">Verificar</button>
+
+    <div id="resultado"></div>
+
+    <script>
+        function verificar() {
+            const anoNascimento = document.getElementById("ano").value;
+            const anoAtual = new Date().getFullYear();
+            const idade = anoAtual - anoNascimento;
+            let faixa = "";
+
+            if (idade >= 0 && idade <= 12) {
+                faixa = "Criança";
+            } else if (idade >= 13 && idade <= 17) {
+                faixa = "Jovem";
+            } else if (idade >= 18 && idade <= 59) {
+                faixa = "Adulto";
+            } else if (idade >= 60) {
+                faixa = "Idoso";
+            } else {
+                faixa = "Ano de nascimento inválido.";
+            }
+
+            document.getElementById("resultado").innerText = 
+                `Você tem ${idade} anos. Faixa etária: ${faixa}`;
+        }
+    </script>
+</body>
+</html>
